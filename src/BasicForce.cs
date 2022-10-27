@@ -3,20 +3,22 @@ using Zene.Structs;
 
 namespace Zene.Physics
 {
-    public class GravityForce : IForceController
+    public class BasicForce : IForceController
     {
-        public GravityForce(double strength)
+        public BasicForce(Vector2 direction, double strength)
         {
+            Direction = direction.Normalised();
             Strength = strength;
         }
 
+        public Vector2 Direction { get; set; }
         public double Strength { get; set; }
         bool IForceController.Pressure => false;
 
         public Vector2 GetForce<T>(IPhysicsObject<T> @object, out Vector2 point) where T : IPhysicsBounds
         {
             point = @object.COM;
-            return (0d, -Strength * @object.Mass);
+            return Direction * Strength;
         }
         public Pressure GetPressure<T>(IPhysicsObject<T> @object) where T : IPhysicsBounds
         {
